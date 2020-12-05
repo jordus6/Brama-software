@@ -16,7 +16,7 @@
 #define MOTOR_DOWN 4
 #define SERVICE 5
 
-volatile int State;
+volatile int State; //0 when last state was closing, 1 when last state was opening
 int PreviousState;
 bool AutoClose; // If true closing after GATE_OPENED_TIME is active
 bool KeepOpened;  // If true the gate keeps being opened
@@ -108,25 +108,25 @@ void setup() {
   //Definition of push message.
   struct PushSaferInput input,input1;
   input.message = "Ktoś otworzył bramę!";
-  input.message = "Wymagane smarowanie.";
+  input1.message = "Wymagane smarowanie.";
   input.title = "Warning";
-  input.title = "Service_information";
+  input1.title = "Service_information";
   input.sound = "10";
-  input.sound = "5";
+  input1.sound = "5";
   input.vibration = "1";
-  input.vibration = "1";
+  input1.vibration = "1";
   input.icon = "1";
-  input.icon = "1";
+  input1.icon = "1";
   input.iconcolor = "#FFCCCC";
-  input.iconcolor = "#FFCCCC";
+  input1.iconcolor = "#FFCCCC";
   input.priority = "1";
-  input.priority = "2";
+  input1.priority = "2";
   input.device = "phone";
-  input.device = "phone";
+  input1.device = "phone";
   input.url = "https://www.pushsafer.com";
-  input.url = "https://www.pushsafer.com";
+  input1.url = "https://www.pushsafer.com";
   input.urlTitle = "Open Pushsafer.com";
-  input.urlTitle = "Open Pushsafer.com";
+  input1.urlTitle = "Open Pushsafer.com";
 
   // Specify IP address to ping
   String hostName = 127.*.*.**;

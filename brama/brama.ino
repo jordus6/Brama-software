@@ -1,26 +1,31 @@
 #include <Timers.h>
 #include <Bounce2.h>
+#include <IRremote.h> // library for IR reader
 
-#define PILOT 10
+#define RECIEVEPIN 10
 #define SENSOR_UP 9
 #define SENSOR_DOWN 8
 #define OBSTACLE 7
 #define LIGHT 2
 #define MOTOR_UP 3 
 #define MOTOR_DOWN 4
-//siema
-volatile int State  = 1;
-int PreviousState   = 0; //0 when last state was closing, 1 when last state was opening
+
+IRrecv irrecv(RECIEVEPIN); 
+decode_results results;
+volatile int State       = 1;
+const long int PILOTCODE = 0000000000; // Code on the pilot
+int PreviousState        = 0; //0 when last state was closing, 1 when last state was opening
 bool AutoClose; // If true closing after GATE_OPENED_TIME is active
 bool KeepOpened;  // If true the gate keeps being opened 
+bool PilotSignal; // true when recieved right code from IR reader
 const int GATE_OPENED_TIME = 5000; // Here we set time for the gate to stay opened
-Bounce PilotRisingEgde = Bounce(PILOT, 50); // Object that detects edges after 50ms
-Bounce PilotLongPress = Bounce(PILOT, 1000); // Object that detects edges after 1000ms
+Bounce PilotRisingEgde = Bounce(PilotSignal, 50); // Object that detects edges after 50ms
+Bounce PilotLongPress = Bounce(PilotSignal, 1000); // Object that detects edges after 1000ms
 Timer Timer1;
 
 void setup() {
   // Set pin modes
-  pinMode(PILOT, INPUT);
+  //pinMode(PILOT, INPUT);
   pinMode(SENSOR_UP, INPUT);
   pinMode(SENSOR_DOWN, INPUT);
   pinMode(OBSTACLE, INPUT);
@@ -28,10 +33,17 @@ void setup() {
   pinMode(MOTOR_UP, OUTPUT); 
   pinMode(MOTOR_DOWN, OUTPUT); 
   Timer1.begin(GATE_OPENED_TIME); // Time to keep gate open
+  irrecv.enableIRIn(); // Enable IR reader
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  if(irrecv.decode(&results) && results.value == PILOTCODE){ // If recieved value corresponds value on the pilot set PilotSignal variable
+    PilotSignal = true;
+  }
+  else{
+    PilotSignal = false;
+  }
 
   if (PilotLongPress.risingEdge()){ // if 1000ms press on pilot was detected set KeepOpened
     KeepOpened = true;

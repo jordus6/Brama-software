@@ -2,13 +2,13 @@
 #include <Bounce2.h>
 #include <IRremote.h> // library for IR reader
 
-#define RECIEVEPIN 10
-#define SENSOR_UP 9
-#define SENSOR_DOWN 8
+#define RECIEVEPIN 5
+#define SENSOR_UP 2
+#define SENSOR_DOWN 3
 #define OBSTACLE 7
-#define LIGHT 2
-#define MOTOR_UP 3 
-#define MOTOR_DOWN 4
+#define LIGHT 4
+#define MOTOR_UP 8 
+#define MOTOR_DOWN 9
 
 IRrecv irrecv(RECIEVEPIN); 
 decode_results results;
